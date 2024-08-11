@@ -1,5 +1,17 @@
-// Import the Spinner component into this file and test
-// that it renders what it should for the different props it can take.
+import React from 'react';
+import { render } from '@testing-library/react';
+import Spinner from './Spinner';
+
 test('sanity', () => {
-  expect(true).toBe(false)
-})
+  expect(true).toBe(true);
+});
+
+test('Spinner renders when "on" is true', () => {
+  const { container } = render(<Spinner on={true} />);
+  expect(container.firstChild).not.toBeNull();
+});
+
+test('Spinner does not render when "on" is false', () => {
+  const { container } = render(<Spinner on={false} />);
+  expect(container.firstChild).toBeNull();
+});

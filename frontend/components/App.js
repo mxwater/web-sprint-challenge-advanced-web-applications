@@ -122,44 +122,42 @@ export default function App() {
     }
   };
 
-  const updateArticle = async (article_id, updatedArticle) => {
+  const updateArticle = async (article_id, articleData) => {
     setMessage(''); // Clear the message when the spinner is active
     setSpinnerOn(true);
-
+  
     try {
-        const response = await fetch(`${articlesUrl}/${article_id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('token'),
-            },
-            body: JSON.stringify(updatedArticle)
+      const response = await fetch(`${articlesUrl}/${article_id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('token'),
+        },
+        body: JSON.stringify(articleData)
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        setArticles(prevArticles => {
+          const updatedArticles = prevArticles.map(article =>
+            article.article_id === article_id ? { ...article, ...articleData } : article
+          );
+          return updatedArticles; // Return the updated array directly
         });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          setArticles(prevArticles => {
-            const updatedArticles = prevArticles.map(art =>
-                art.article_id === article_id ? { ...art, ...updatedArticle } : art
-            );
-            return [...updatedArticles]; // Ensuring a new array reference
-        });
-        
-
-            setMessage(data.message);
-            
-            setCurrentArticleId(null);  
-        } else {
-            setMessage(data.message);
-        }
+  
+        setMessage(data.message); // Display the success message
+        setCurrentArticleId(null); // Reset the form
+      } else {
+        setMessage(data.message);
+      }
     } catch (error) {
-        setMessage(data.error);
+      setMessage(`An error occurred: ${error.message}`);
     } finally {
-        setSpinnerOn(false);
+      setSpinnerOn(false);
     }
-};
-
+  };  
+  
 
 
   const deleteArticle = async (article_id) => {
