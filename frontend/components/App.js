@@ -80,7 +80,7 @@ export default function App() {
       .then(response => response.json())
 
       .then(data => {
-        const username = localStorage.getItem('username');  // Check this value
+        const username = localStorage.getItem('username');
         setArticles(data.articles);
         setMessage(data.message);
       })
